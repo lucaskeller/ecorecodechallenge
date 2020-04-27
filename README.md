@@ -14,7 +14,7 @@ At the first time I didn't split the code that generates the challenge, but afte
 
 I found a problem dealing with big.Int values and operations, on `multiply` endpoint that I decided to left it to deliver the code on time, but I'll continue the challenge to get more knowlegde on this language. 
 
-About the tests, I don't know if the best approach is to send the local file through the service by `multipart/form-data`, or simply create a Slice to teste the features/challenges. But the challenge was really nice hehe
+About the tests, I don't know if the best approach is to send the local file through the service by `multipart/form-data`, or simply create a Slice to test the features. But the challenge was really nice hehe
 
 well, this code came out of approximately 10h of study in the language, I am sure that some improvements will be evident for a more experienced programmer.
 
@@ -23,7 +23,7 @@ What I noticed can be improvements:
 - make more use of language resources such as Receiver Functions
 - test structure could contain less code repetition, and maybe different test cases as well
 - use `big.Int` in the `multiply` service
-- maybe the types on `sum` and` multiply` could be `int` and` * Int` respectively
+- maybe the return types on `sum` and `multiply` could be `int` and` * Int` respectively
 
 
 # League Backend Challenge
