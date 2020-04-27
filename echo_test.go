@@ -1,32 +1,63 @@
 package main
 
 import (
+	"fmt"
+	"io/ioutil"
+	"mime/multipart"
+	"bytes"
 	"net/http/httptest"
-	"net/http"
 	"testing"
 )
 
 
 func TestEcho(t *testing.T) {
-    req, err := http.NewRequest("GET", "/echo", nil)
-    if err != nil {
-        t.Fatal(err)
-		}
-		req.Header.Add("Content-Type", "multipart/form-data")
-		req.Body.Add("file", "@/Users/lucaskeller/projects/ecore/codechallenge/matrix.csv")
+	//
+	// CREATING THE FILE TO TEST
 
-    rr := httptest.NewRecorder()
-    handler := http.HandlerFunc(echo)
-    handler.ServeHTTP(rr, req)
-    if status := rr.Code; status != http.StatusOK {
-        t.Errorf("handler returned wrong status code: got %v want %v",
-            status, http.StatusOK)
-    }
+	// creating the body content to send a file via multipar/form-data
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	part, _ := writer.CreateFormFile("file", "matrix.csv")
+	
+	// read some local file
+	bs, err := ioutil.ReadFile("matrix.csv")
+	if err != nil {
+		t.Errorf("Error reading local file for testing: %v", err)
+	}
 
-    // Check the response body is what we expect.
-    expected := ""
-    if rr.Body.String() != expected {
-        t.Errorf("handler returned unexpected body: got %v want %v",
-            rr.Body.String(), expected)
-    }
+	// write the file to the pipe
+	part.Write(bs)
+
+	// finish multipart adding file boundaries
+	writer.Close()
+
+	// create a new http.Request fopr testing purpose
+	// using post to have how to set the body content
+	req := httptest.NewRequest("POST", "/echo", body)
+
+	// set the content type, with previous boundaries
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	// returns a *ResponseRecorder
+	rr := httptest.NewRecorder()
+
+	echo(rr, req)
+
+	resp := rr.Result()
+	b, _ := ioutil.ReadAll(resp.Body)
+
+	// get echo response
+	er := string(b)
+
+	// start implementing test cases
+
+	// get the file contents
+	csvf := csvReader(rr, req)
+
+	fmt.Println(csvf)
+	fmt.Println(er)
+
+	//
+	// 1. check string length
+	// if er
 }
