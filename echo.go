@@ -6,14 +6,21 @@ import (
 	"strings"
 )
 
-func echo(w http.ResponseWriter, r *http.Request) {
-		records := csvReader(w, r)
-
-		var response string
+func performEcho(records [][]string) string {
+		response := ""
 
 		for _, row := range records {
 			response = fmt.Sprintf("%s%s\n", response, strings.Join(row, ","))
 		}
 
-		fmt.Fprint(w, response)
+		return response
+}
+
+func echo(w http.ResponseWriter, r *http.Request) {
+	// get multisimensional array from csv file
+	records := csvReader(w, r)
+
+	rd := performEcho(records)
+
+	fmt.Fprint(w, rd)
 }

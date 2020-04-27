@@ -9,7 +9,7 @@ import (
 )
 
 
-func TestEcho(t *testing.T) {
+func TestInvert(t *testing.T) {
 	//
 	// CREATING THE FILE TO TEST
 
@@ -27,7 +27,7 @@ func TestEcho(t *testing.T) {
 
 	// create a new http.Request fopr testing purpose
 	// using post to have how to set the body content
-	req := httptest.NewRequest("POST", "/echo", body)
+	req := httptest.NewRequest("POST", "/invert", body)
 
 	// set the content type, with previous boundaries
 	req.Header.Set("Content-Type", writer.FormDataContentType())
@@ -35,7 +35,7 @@ func TestEcho(t *testing.T) {
 	// returns a *ResponseRecorder
 	rr := httptest.NewRecorder()
 
-	echo(rr, req)
+	invert(rr, req)
 
 	// get the endpoint response
 	resp := rr.Result()
@@ -53,7 +53,7 @@ func TestEcho(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error reading csv file")
 	}
-	tr := performEcho(records)
+	tr := performInvert(records)
 
 
 	if sr != tr {

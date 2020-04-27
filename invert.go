@@ -5,29 +5,38 @@ import (
 	"net/http"
 )
 
-func invert(w http.ResponseWriter, r *http.Request){
-	// get multisimensional array from csv file
-	rd := csvReader(w, r)
+func performInvert(records [][]string) string {
+	response := ""
 
 	// calculate the heigth (h) and width (w) of the matrix
-	wd := len(rd)
-	hg := len(rd[0])
+	wd := len(records)
+	hg := len(records[0])
 
 	if hg == 0 || wd == 0 { 
-		fmt.Fprint(w, "zero/zero matrix")
-		return
+		return "zero/zero matrix"
 	}
 
 	for i := 0; i < hg; i++ {
 		for j := 0; j < wd; j++ {
 
-			fmt.Fprint(w, rd[j][i])
+			response = response + string(records[j][i])
 
 			if j == wd -1 {
-				fmt.Fprint(w, "\n")
+				response = response + "\n"
 			} else {
-				fmt.Fprint(w, ",")
+				response = response + ","
 			}
 		}
 	}
+
+	return response
+}
+
+func invert(w http.ResponseWriter, r *http.Request){
+	// get multisimensional array from csv file
+	records := csvReader(w, r)
+
+	rd := performInvert(records)
+
+	fmt.Fprint(w, rd)
 }
